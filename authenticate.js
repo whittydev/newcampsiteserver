@@ -40,3 +40,14 @@ exports.jwtPassport = passport.use(
 );
 
 exports.verifyUser = passport.authenticate('jwt', {session: false});
+// exports.verifyAdmin = passport.authenticate('jwt', {admin: true});
+
+exports.verifyAdmin = function(req, res, next) {
+    if (!req.user.admin) {
+        var err = new Error('You are not authorized to perform such actions')
+        err.status = 401;
+        return next(err);
+    } else {
+        return next();
+    }
+};

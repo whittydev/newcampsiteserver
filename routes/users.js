@@ -2,12 +2,21 @@ const express = require('express');
 const User = require('../models/user');
 const passport = require('passport');
 const authenticate = require('../authenticate');
+const { get } = require('mongoose');
 
 const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');
+});
+
+router.route('/')
+.get(authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+User.find({}, function (err, user) {
+    if (err) throw err;
+    res.json(user);
+});
 });
 
 router.post('/signup', (req, res) => {
